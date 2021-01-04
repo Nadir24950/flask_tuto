@@ -1,7 +1,7 @@
 import sqlite3
 from sqlite3.dbapi2 import PARSE_DECLTYPES
 import click
-from flask import current_app
+from flask import current_app, g
 from flask.cli import with_appcontext
 
 def get_db():
