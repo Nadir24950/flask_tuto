@@ -1,3 +1,4 @@
+from os import close
 import sqlite3
 from sqlite3.dbapi2 import PARSE_DECLTYPES
 import click
@@ -20,4 +21,23 @@ def close_db(e=None):
 
     if db is not None:
         db.close()
+
+def init_db():
+    db = get_db()
+
+    with current_app.open_resource('schema.sql') as f:
+        db.executescript(f.read().decode('utf8'))
+
+@click.command('init_db')
+@with_appcontext
+
+def init_db_command():
+    #clear the existing data and create a new table
+    init_db()
+    click.echo('Initinilised the Database.')
+
+def init_app(app):
+    app.teardown_appcontext(close_db)
+    app.cli.add_command(init_db_command)
+
 
